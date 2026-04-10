@@ -38,6 +38,11 @@
       </div>
     </div>
 
+    <div class="flex items-center pt-2">
+      <%= f.check_box :private, checked: true, class: "w-5 h-5 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2" %>
+      <%= f.label :private, "Private Event (Only invited guests and you can see this event)", class: "ml-3 text-sm font-medium text-gray-700" %>
+    </div>
+
     <div class="pt-4">
       <%= f.submit "Create Event", class: "w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-bold py-4 rounded-xl shadow-lg transform active:scale-[0.98] transition-all cursor-pointer" %>
     </div>
