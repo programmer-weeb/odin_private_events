@@ -13,10 +13,19 @@ class Event < ApplicationRecord
            through: :attendances,
            source: :attendee
 
+  has_many :invitations,
+           dependent: :destroy
+           
+  has_many :invitees,
+           through: :invitations,
+           source: :invitee
+
   validates :title, presence: true
   validates :description, presence: true
   validates :event_date, presence: true
   validates :location, presence: true
   scope :past, -> { where("event_date < ?", Time.current) }
   scope :upcoming, -> { where("event_date >= ?", Time.current) }
+  scope :public_events, -> { where(private: false) }
+  scope :private_events, -> { where(private: true) }
 end
