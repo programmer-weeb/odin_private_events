@@ -22,8 +22,23 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="bg-gray-50 text-gray-900 font-sans antialiased">
+    <nav class="bg-indigo-600 text-white p-4 w-full fixed top-0 z-50 shadow-md">
+      <div class="container mx-auto flex justify-between items-center px-5">
+        <%= link_to "Odin Private Events", root_path, class: "text-2xl font-bold tracking-tight hover:text-indigo-200 transition-colors" %>
+        <div class="flex gap-6 items-center font-medium">
+          <% if user_signed_in? %>
+            <%= link_to "Create Event", new_event_path, class: "hover:text-indigo-200 transition-colors" %>
+            <%= link_to "My Profile", user_path(current_user), class: "hover:text-indigo-200 transition-colors" %>
+            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "hover:text-indigo-200 transition-colors bg-transparent text-white border-none cursor-pointer p-0 font-medium", data: { turbo_method: :delete } %>
+          <% else %>
+            <%= link_to "Sign In", new_user_session_path, class: "hover:text-indigo-200 transition-colors" %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "bg-white text-indigo-600 px-4 py-2 rounded-md hover:bg-indigo-100 transition-colors" %>
+          <% end %>
+        </div>
+      </div>
+    </nav>
+    <main class="container mx-auto mt-28 px-5 flex flex-col">
       <%= yield %>
     </main>
   </body>
