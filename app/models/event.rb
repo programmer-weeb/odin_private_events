@@ -13,4 +13,8 @@ class Event < ApplicationRecord
            through: :attendances,
            source: :attendee
 
+  validates :title, presence: true
+  validates :description, presence: true
+  validates :event_date, presence: true
+  validates :location, presence: true
 end
