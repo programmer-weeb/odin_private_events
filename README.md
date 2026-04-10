@@ -2,6 +2,8 @@
 
 A sophisticated event management platform built with **Ruby on Rails 8**. This application allows users to create, manage, and attend events, featuring a robust invitation system for private gatherings.
 
+[**Live Demo**](https://uropygial-overofficious-lovella.ngrok-free.dev/)
+
 This project was developed as part of **The Odin Project's** Ruby on Rails curriculum, focusing on complex data associations and authentication.
 
 ---
