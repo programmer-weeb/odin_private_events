@@ -1,13 +1,9 @@
-<div class="max-w-2xl mx-auto p-8 bg-white rounded-2xl shadow-xl border border-gray-100 mt-10">
-  <div class="mb-10 text-center">
-    <h1 class="text-4xl font-extrabold text-gray-900 mb-2">Edit Event</h1>
-    <p class="text-gray-500">Update your event details below.</p>
+<div class="max-w-xl mx-auto space-y-12 py-12">
+  <div class="space-y-4">
+    <h1 class="text-vercel-black">Edit Event</h1>
+    <p class="text-lg text-gray-500">Refine your event details to perfection.</p>
   </div>
 
   <% provide(:button_text, "Update Event") %>
   <%= render "form", event: @event %>
-
-  <div class="text-center mt-6">
-    <%= link_to "Cancel and return to event", @event, class: "text-sm text-gray-500 hover:text-indigo-600 transition-colors" %>
-  </div>
 </div>
