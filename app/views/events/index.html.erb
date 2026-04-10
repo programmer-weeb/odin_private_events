@@ -1,4 +1,58 @@
-<div>
-  <h1 class="font-bold text-4xl">Events#index</h1>
-  <p>Find me in app/views/events/index.html.erb</p>
+<div class="w-full max-w-6xl mx-auto px-4 py-12">
+  <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+    <div>
+      <h1 class="text-5xl font-black text-gray-900 tracking-tight mb-2">Private Events</h1>
+      <p class="text-gray-500 text-lg">Discover and create exclusive gatherings.</p>
+    </div>
+    
+    <% if user_signed_in? %>
+      <%= link_to new_event_path, class: "group relative inline-flex items-center px-8 py-4 bg-gray-900 text-white font-bold rounded-2xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-xl" do %>
+        <span class="relative z-10 flex items-center">
+          <svg class="w-5 h-5 mr-2 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          Create New Event
+        </span>
+        <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+      <% end %>
+    <% else %>
+      <%= link_to new_user_session_path, class: "inline-flex items-center px-8 py-4 bg-indigo-600 text-white font-bold rounded-2xl transition-all hover:bg-indigo-700 shadow-lg" do %>
+        Sign in to create an event
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @events.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% @events.each do |event| %>
+        <%= link_to event, class: "group bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col h-full" do %>
+          <div class="flex items-center justify-between mb-4">
+            <div class="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-bold rounded-full uppercase tracking-wider">
+              <%= event.event_date.strftime("%b %d") if event.event_date %>
+            </div>
+            <div class="text-gray-400 group-hover:text-indigo-500 transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </div>
+          </div>
+          
+          <h2 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors"><%= event.title %></h2>
+          <p class="text-gray-500 line-clamp-3 mb-6 flex-grow"><%= event.description %></p>
+          
+          <div class="flex items-center text-sm text-gray-400 mt-auto pt-4 border-t border-gray-50">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <%= event.location %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+      <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <span class="text-4xl text-gray-400">📅</span>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900 mb-2">No events found</h3>
+      <p class="text-gray-500 mb-8">Be the first to create an amazing event!</p>
+      <% if user_signed_in? %>
+        <%= link_to "Create your first event", new_event_path, class: "text-indigo-600 font-bold hover:text-indigo-800 transition-colors" %>
+      <% end %>
+    </div>
+  <% end %>
 </div>
