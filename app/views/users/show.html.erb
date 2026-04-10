@@ -1,0 +1,113 @@
+<div class="max-w-4xl mx-auto mt-10 p-8 w-full">
+  <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+    <div class="h-48 bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 relative">
+      <div class="absolute bottom-[-2.5rem] left-8">
+         <div class="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center border-4 border-white">
+            <span class="text-3xl text-indigo-600 font-black"><%= @user.email[0].upcase %></span>
+         </div>
+      </div>
+    </div>
+
+    <div class="p-8 pt-16">
+      <div class="flex flex-col md:flex-row justify-between items-start mb-10 gap-4">
+        <div>
+          <h1 class="text-4xl font-black text-gray-900 mb-2"><%= @user.email.split('@').first.capitalize %>'s Profile</h1>
+          <div class="flex flex-wrap items-center text-gray-500 gap-4">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+              <%= @user.email %>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              Joined <%= @user.created_at.strftime("%b %Y") %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Created Events Section -->
+      <div class="mb-10">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Created Events (<%= @user.created_events.count %>)</h3>
+        </div>
+
+        <% if @user.created_events.any? %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <% @user.created_events.each do |event| %>
+              <%= link_to event_path(event), class: "block group" do %>
+                <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 group-hover:border-indigo-200 group-hover:bg-white group-hover:shadow-md transition-all h-full">
+                  <h4 class="font-bold text-gray-900 mb-1 group-hover:text-indigo-600 transition-colors"><%= event.title %></h4>
+                  <div class="text-xs text-gray-500 flex items-center mt-2">
+                    <svg class="w-4 h-4 mr-1 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <%= event.event_date.strftime("%b %d, %Y") if event.event_date %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="flex flex-col items-center justify-center py-8 px-4 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+            <p class="text-gray-500 font-medium">No created events yet.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Attended Events Section -->
+      <% past_events = @user.attended_events.where("event_date < ?", Time.current) %>
+      <% future_events = @user.attended_events.where("event_date >= ?", Time.current) %>
+
+      <div class="mb-10">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Upcoming Attended Events (<%= future_events.count %>)</h3>
+        </div>
+
+        <% if future_events.any? %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <% future_events.each do |event| %>
+              <%= link_to event_path(event), class: "block group" do %>
+                <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 group-hover:border-purple-200 group-hover:bg-white group-hover:shadow-md transition-all h-full">
+                  <h4 class="font-bold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors"><%= event.title %></h4>
+                  <div class="text-xs text-gray-500 flex items-center mt-2">
+                    <svg class="w-4 h-4 mr-1 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <%= event.event_date.strftime("%b %d, %Y") if event.event_date %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="flex flex-col items-center justify-center py-8 px-4 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+            <p class="text-gray-500 font-medium">No upcoming events.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mb-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Past Attended Events (<%= past_events.count %>)</h3>
+        </div>
+
+        <% if past_events.any? %>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <% past_events.each do |event| %>
+              <%= link_to event_path(event), class: "block group" do %>
+                <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100 group-hover:border-purple-200 group-hover:bg-white group-hover:shadow-md transition-all h-full opacity-75">
+                  <h4 class="font-bold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors"><%= event.title %></h4>
+                  <div class="text-xs text-gray-500 flex items-center mt-2">
+                    <svg class="w-4 h-4 mr-1 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <%= event.event_date.strftime("%b %d, %Y") if event.event_date %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="flex flex-col items-center justify-center py-8 px-4 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+            <p class="text-gray-500 font-medium">No past events.</p>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>
