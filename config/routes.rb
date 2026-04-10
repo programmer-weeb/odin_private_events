@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   resources :events do
     resources :invitations, only: [:create]
+    resource :attendance, only: [:create, :destroy]
   end
 
 end
