@@ -82,7 +82,7 @@ production:
   primary: &primary_production
     <<: *default
     database: odin_private_events_production
-    username: odin_private_events
+    username: <%= ENV.fetch("ODIN_PRIVATE_EVENTS_DATABASE_USERNAME") { "odin_private_events" } %>
     password: <%= ENV["ODIN_PRIVATE_EVENTS_DATABASE_PASSWORD"] %>
   cache:
     <<: *primary_production
