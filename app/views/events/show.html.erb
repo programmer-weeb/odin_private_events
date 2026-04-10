@@ -121,7 +121,10 @@
 
       <div class="flex flex-wrap gap-4 pt-4">
         <%= link_to "Back to all events", events_path, class: "px-6 py-3 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all font-semibold" %>
-        <!-- Placeholder for future buttons -->
+        <% if current_user == @event.creator %>
+          <%= link_to "Edit Event", edit_event_path(@event), class: "px-6 py-3 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-all font-semibold border border-indigo-100" %>
+          <%= button_to "Delete Event", @event, method: :delete, data: { confirm: "Are you sure?" }, class: "px-6 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all font-semibold border border-red-100 cursor-pointer" %>
+        <% end %>
       </div>
     </div>
   </div>
