@@ -1,146 +1,122 @@
-<div class="max-w-4xl mx-auto mt-10 p-8 w-full">
-  <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-    <div class="h-48 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 relative">
-      <div class="absolute bottom-[-2.5rem] left-8">
-         <div class="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center border-4 border-white">
-            <span class="text-3xl">🎉</span>
-         </div>
+<div class="max-w-4xl mx-auto space-y-12">
+  <div class="space-y-8">
+    <div class="flex flex-col md:flex-row justify-between items-start gap-6 border-b border-gray-100 pb-8">
+      <div class="space-y-4 flex-grow">
+        <div class="flex items-center gap-3">
+          <span class="badge <%= @event.private? ? 'bg-preview-pink/10 text-preview-pink' : 'badge-blue' %>">
+            <%= @event.private? ? 'Private' : 'Public' %>
+          </span>
+          <span class="text-sm font-medium text-gray-400">
+            Created by <%= @event.creator.email %>
+          </span>
+        </div>
+        <h1 class="text-vercel-black"><%= @event.title %></h1>
+        <div class="flex flex-wrap items-center gap-6 text-gray-500">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <span class="text-sm font-medium"><%= @event.event_date.strftime("%B %d, %Y at %I:%M %p") if @event.event_date %></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span class="text-sm font-medium"><%= @event.location %></span>
+          </div>
+        </div>
       </div>
+
+      <% if user_signed_in? %>
+        <div class="flex flex-col gap-3 w-full md:w-auto">
+          <% if @event.attendees.include?(current_user) %>
+            <div class="card !p-4 border-l-2 border-ship-red bg-gray-50 flex items-center justify-between gap-4">
+              <span class="text-xs font-semibold uppercase tracking-wider text-vercel-black">You are attending</span>
+              <%= button_to "Leave", event_attendance_path(@event), method: :delete, class: "text-xs font-medium text-ship-red hover:underline bg-transparent border-none cursor-pointer" %>
+            </div>
+          <% elsif @event.invitees.include?(current_user) %>
+            <%= button_to "Accept Invitation", event_attendance_path(@event), method: :post, class: "btn btn-primary h-11 px-8 w-full" %>
+          <% elsif !@event.private? && current_user != @event.creator %>
+            <%= button_to "Join Event", event_attendance_path(@event), method: :post, class: "btn btn-primary h-11 px-8 w-full" %>
+          <% end %>
+
+          <% if current_user == @event.creator %>
+            <div class="flex gap-2">
+              <%= link_to "Edit", edit_event_path(@event), class: "btn btn-secondary flex-1" %>
+              <%= button_to "Delete", @event, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-secondary text-ship-red hover:bg-ship-red/5 flex-1" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
     </div>
 
-    <div class="p-8 pt-16">
-      <div class="flex flex-col md:flex-row justify-between items-start mb-6 gap-4">
-        <div>
-          <h1 class="text-4xl font-black text-gray-900 mb-2 flex items-center">
-            <%= @event.title %>
-            <% if @event.private? %>
-              <span class="ml-4 bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded-full border border-purple-200">Private</span>
-            <% else %>
-              <span class="ml-4 bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full border border-green-200">Public</span>
-            <% end %>
-          </h1>
-          <div class="flex flex-wrap items-center text-gray-500 gap-4">
-            <div class="flex items-center">
-              <svg class="w-5 h-5 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-              <%= @event.event_date.strftime("%B %d, %Y at %I:%M %p") if @event.event_date %>
-            </div>
-            <div class="flex items-center">
-              <svg class="w-5 h-5 mr-1 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-              <%= @event.location %>
-            </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div class="lg:col-span-2 space-y-12">
+        <section class="space-y-4">
+          <h4 class="text-vercel-black">About this event</h4>
+          <div class="text-gray-600 leading-relaxed space-y-4 max-w-none prose prose-gray">
+            <%= simple_format @event.description %>
           </div>
-        </div>
-        <div class="bg-indigo-50 px-6 py-3 rounded-2xl border border-indigo-100 self-end md:self-start">
-          <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest block mb-1">Created By</span>
-          <p class="text-sm font-semibold text-gray-800"><%= @event.creator.email %></p>
-        </div>
-      </div>
+        </section>
 
-      <div class="py-8 border-y border-gray-50 my-8">
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Description</h3>
-        <div class="prose prose-indigo max-w-none text-gray-600 leading-relaxed text-lg">
-          <%= @event.description %>
-        </div>
-      </div>
+        <section class="space-y-6">
+          <div class="flex items-center justify-between">
+            <h4 class="text-vercel-black">Attendees</h4>
+            <span class="badge badge-blue"><%= @event.attendees.count %> total</span>
+          </div>
 
-      <div class="mb-10">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Attendees (<%= @event.attendees.count %>)</h3>
-        </div>
-
-        <% if @event.attendees.any? %>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-            <% @event.attendees.each do |attendee| %>
-              <div class="flex items-center p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-indigo-200 hover:bg-white hover:shadow-md transition-all group">
-                <div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 font-bold mr-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                  <%= attendee.email[0].upcase %>
+          <% if @event.attendees.any? %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <% @event.attendees.each do |attendee| %>
+                <div class="card !p-4 flex items-center gap-4">
+                  <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-vercel-black">
+                    <%= attendee.email[0].upcase %>
+                  </div>
+                  <div class="flex-grow min-w-0">
+                    <p class="text-sm font-semibold text-vercel-black truncate"><%= attendee.email %></p>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-tight">Joined <%= attendee.created_at.strftime("%b %d") %></p>
+                  </div>
                 </div>
-                <div>
-                  <p class="text-sm font-bold text-gray-900"><%= attendee.email %></p>
-                  <p class="text-xs text-gray-500">Joined on <%= attendee.created_at.strftime("%b %d, %Y") %></p>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="flex flex-col items-center justify-center py-12 px-4 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 mb-10">
-            <div class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-4">
-              <span class="text-2xl text-gray-400">👤</span>
-            </div>
-            <p class="text-gray-500 font-medium">No attendees yet.</p>
-            <p class="text-sm text-gray-400 mt-1">Be the first to join this event!</p>
-          </div>
-        <% end %>
-
-        <% if user_signed_in? %>
-          <div class="border-t border-gray-100 pt-8 mt-4 text-center">
-            <% if @event.attendees.include?(current_user) %>
-              <div class="bg-rose-50 p-6 rounded-2xl border border-rose-100 inline-block w-full max-w-sm">
-                <span class="text-3xl mb-2 block">🏃‍♂️</span>
-                <h3 class="font-bold text-rose-900 mb-2">You're attending!</h3>
-                <p class="text-sm text-rose-700 mb-4">Changed your mind? You can cancel your attendance below.</p>
-                <%= button_to "Leave Event", event_attendance_path(@event), method: :delete, data: { confirm: "Are you sure you want to leave this event?" }, class: "w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer" %>
-              </div>
-            <% elsif @event.invitees.include?(current_user) %>
-              <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 inline-block w-full max-w-sm">
-                <span class="text-3xl mb-2 block">💌</span>
-                <h3 class="font-bold text-indigo-900 mb-2">You're invited!</h3>
-                <p class="text-sm text-indigo-700 mb-4">Would you like to attend this event?</p>
-                <%= button_to "Accept Invitation & Attend", event_attendance_path(@event), method: :post, class: "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer" %>
-              </div>
-            <% elsif !@event.private? && current_user != @event.creator %>
-              <div class="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 inline-block w-full max-w-sm">
-                <span class="text-3xl mb-2 block">🤝</span>
-                <h3 class="font-bold text-emerald-900 mb-2">Join the Event</h3>
-                <p class="text-sm text-emerald-700 mb-4">This is a public event. Everyone is welcome!</p>
-                <%= button_to "Join Event", event_attendance_path(@event), method: :post, class: "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer" %>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-
-        <% if current_user == @event.creator %>
-          <div class="border-t border-gray-100 pt-8 mt-4">
-            <h3 class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-6 block">Invite Guests</h3>
-            
-            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mb-8">
-              <%= form_with(model: [@event, Invitation.new], local: true, class: "flex items-center gap-4") do |f| %>
-                <div class="flex-grow">
-                  <%= f.collection_select :invitee_id, User.where.not(id: @event.invitees.pluck(:id) + [@event.creator_id]), :id, :email, { prompt: "Select a user to invite..." }, { class: "w-full px-4 py-3 rounded-xl border border-indigo-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none" } %>
-                </div>
-                <%= f.submit "Send Invite", class: "bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer whitespace-nowrap" %>
               <% end %>
             </div>
-
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Invited Users (<%= @event.invitees.count %>)</h3>
+          <% else %>
+            <div class="card !p-8 flex flex-col items-center justify-center text-center space-y-2 border-dashed border-2">
+              <p class="text-sm font-medium text-vercel-black">No attendees yet.</p>
+              <p class="text-xs text-gray-400">Be the first to join this exclusive gathering.</p>
             </div>
-            <% if @event.invitees.any? %>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <% @event.invitees.each do |invitee| %>
-                  <div class="flex items-center p-4 bg-white rounded-2xl border border-gray-100 shadow-sm opacity-80">
-                    <div class="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center text-gray-500 font-bold mr-4">
-                      <%= invitee.email[0].upcase %>
-                    </div>
-                    <div>
-                      <p class="text-sm font-bold text-gray-700"><%= invitee.email %></p>
-                      <p class="text-xs text-indigo-500 font-medium">Invited</p>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <p class="text-sm text-gray-500 italic">No one has been invited yet.</p>
-            <% end %>
-          </div>
-        <% end %>
+          <% end %>
+        </section>
       </div>
 
-      <div class="flex flex-wrap gap-4 pt-4">
-        <%= link_to "Back to all events", events_path, class: "px-6 py-3 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all font-semibold" %>
+      <div class="space-y-8">
         <% if current_user == @event.creator %>
-          <%= link_to "Edit Event", edit_event_path(@event), class: "px-6 py-3 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-all font-semibold border border-indigo-100" %>
-          <%= button_to "Delete Event", @event, method: :delete, data: { confirm: "Are you sure?" }, class: "px-6 py-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-all font-semibold border border-red-100 cursor-pointer" %>
+          <section class="space-y-6">
+            <h4 class="text-vercel-black">Invite Guests</h4>
+            <div class="card space-y-6">
+              <%= form_with(model: [@event, Invitation.new], local: true, class: "space-y-4") do |f| %>
+                <div class="space-y-2">
+                  <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Select User</label>
+                  <%= f.collection_select :invitee_id, User.where.not(id: @event.invitees.pluck(:id) + [@event.creator_id]), :id, :email, { prompt: "Select a user..." }, { class: "w-full bg-white shadow-border h-10 px-3 rounded-md text-sm outline-none focus:ring-2 focus:ring-develop-blue/20 transition-all border-none" } %>
+                </div>
+                <%= f.submit "Send Invitation", class: "btn btn-primary w-full h-10" %>
+              <% end %>
+
+              <% if @event.invitees.any? %>
+                <div class="space-y-3 pt-4 border-t border-gray-100">
+                  <label class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Pending Invites (<%= @event.invitees.count %>)</label>
+                  <div class="space-y-2">
+                    <% @event.invitees.each do |invitee| %>
+                      <div class="flex items-center justify-between text-sm py-1">
+                        <span class="text-gray-600 truncate mr-2"><%= invitee.email %></span>
+                        <span class="badge !bg-gray-100 !text-gray-400">Invited</span>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </section>
+        <% end %>
+        
+        <%= link_to events_path, class: "flex items-center gap-2 text-sm font-medium text-gray-400 hover:text-vercel-black transition-colors" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          Back to all events
         <% end %>
       </div>
     </div>
