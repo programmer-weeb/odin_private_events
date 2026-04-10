@@ -72,6 +72,33 @@
           </div>
         <% end %>
 
+        <% if user_signed_in? %>
+          <div class="border-t border-gray-100 pt-8 mt-4 text-center">
+            <% if @event.attendees.include?(current_user) %>
+              <div class="bg-rose-50 p-6 rounded-2xl border border-rose-100 inline-block w-full max-w-sm">
+                <span class="text-3xl mb-2 block">🏃‍♂️</span>
+                <h3 class="font-bold text-rose-900 mb-2">You're attending!</h3>
+                <p class="text-sm text-rose-700 mb-4">Changed your mind? You can cancel your attendance below.</p>
+                <%= button_to "Leave Event", event_attendance_path(@event), method: :delete, data: { confirm: "Are you sure you want to leave this event?" }, class: "w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer" %>
+              </div>
+            <% elsif @event.invitees.include?(current_user) %>
+              <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 inline-block w-full max-w-sm">
+                <span class="text-3xl mb-2 block">💌</span>
+                <h3 class="font-bold text-indigo-900 mb-2">You're invited!</h3>
+                <p class="text-sm text-indigo-700 mb-4">Would you like to attend this event?</p>
+                <%= button_to "Accept Invitation & Attend", event_attendance_path(@event), method: :post, class: "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer" %>
+              </div>
+            <% elsif !@event.private? && current_user != @event.creator %>
+              <div class="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 inline-block w-full max-w-sm">
+                <span class="text-3xl mb-2 block">🤝</span>
+                <h3 class="font-bold text-emerald-900 mb-2">Join the Event</h3>
+                <p class="text-sm text-emerald-700 mb-4">This is a public event. Everyone is welcome!</p>
+                <%= button_to "Join Event", event_attendance_path(@event), method: :post, class: "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
         <% if current_user == @event.creator %>
           <div class="border-t border-gray-100 pt-8 mt-4">
             <h3 class="text-xs font-bold text-indigo-600 uppercase tracking-widest mb-6 block">Invite Guests</h3>
@@ -105,16 +132,6 @@
             <% else %>
               <p class="text-sm text-gray-500 italic">No one has been invited yet.</p>
             <% end %>
-          </div>
-        <% elsif user_signed_in? && @event.invitees.include?(current_user) && !@event.attendees.include?(current_user) %>
-          <div class="border-t border-gray-100 pt-8 mt-4 text-center">
-            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 inline-block w-full max-w-sm">
-              <span class="text-3xl mb-2 block">💌</span>
-              <h3 class="font-bold text-indigo-900 mb-2">You're invited!</h3>
-              <p class="text-sm text-indigo-700 mb-4">Would you like to attend this event?</p>
-              <%= button_to "Accept Invitation & Attend", event_attendances_path(@event), method: :post, class: "w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-colors cursor-pointer" rescue "Button Error" %>
-              <!-- Note: using event_attendances_path assuming standard nested route for attendance -->
-            </div>
           </div>
         <% end %>
       </div>
