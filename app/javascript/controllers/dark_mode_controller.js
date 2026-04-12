@@ -10,8 +10,10 @@ export default class extends Controller {
       this.applyTheme(savedTheme)
     } else {
       // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      this.applyTheme(prefersDark ? 'dark' : 'light')
+      // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      // this.applyTheme(prefersDark ? 'dark' : 'light')
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches
+      this.applyTheme(prefersLight ? 'light' : 'dark')
     }
     
     // Update icon based on current theme
