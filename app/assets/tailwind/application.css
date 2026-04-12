@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-geist: "Geist Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Roboto Mono, Menlo, Monaco, Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
@@ -7,7 +9,7 @@
   /* Vercel Palette */
   --color-vercel-black: #171717;
   --color-vercel-white: #ffffff;
-  
+   
   /* Workflow Accents */
   --color-ship-red: #ff5b4f;
   --color-preview-pink: #de1d8d;
@@ -21,6 +23,12 @@
   --color-gray-600: #4d4d4d;
   --color-gray-900: #171717;
 
+  /* Dark Mode Colors */
+  --color-dark-bg: #000000;
+  --color-dark-text: #ffffff;
+  --color-dark-muted: #808080;
+  --color-dark-muted-hover: #d4d4d4;
+
   /* Custom Shadows (Shadow-as-border) */
   --shadow-border: 0 0 0 1px rgba(0, 0, 0, 0.08);
   --shadow-card: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 2px rgba(0, 0, 0, 0.04);
@@ -30,11 +38,27 @@
 
 @layer base {
   body {
-    @apply font-geist bg-white text-vercel-black antialiased selection:bg-gray-100 selection:text-vercel-black;
+    @apply font-geist antialiased bg-white text-vercel-black selection:bg-gray-100 selection:text-vercel-black;
+  }
+
+  .dark body {
+    @apply bg-dark-bg text-dark-text selection:bg-gray-800 selection:text-dark-text;
+  }
+
+  .dark .nav-link {
+    @apply text-dark-muted hover:text-dark-text;
+  }
+  
+  .dark .btn-secondary {
+    @apply bg-dark-bg text-dark-text shadow-border hover:bg-dark-muted/20;
+  }
+  
+  .dark .btn-primary {
+    @apply bg-dark-bg text-white hover:bg-dark-text/80;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-geist font-semibold tracking-tight text-vercel-black;
+    @apply font-geist font-semibold tracking-tight text-vercel-black dark:text-dark-text;
   }
 
   h1 { @apply text-5xl leading-tight; letter-spacing: -2.88px; }
@@ -42,7 +66,7 @@
   h3 { @apply text-3xl leading-tight; letter-spacing: -1.28px; }
   h4 { @apply text-2xl leading-tight; letter-spacing: -0.96px; }
 
-  p { @apply text-gray-600 leading-relaxed; }
+  p { @apply text-gray-600 leading-relaxed dark:text-dark-muted; }
 
   /* Apply global "liga" */
   * {
@@ -53,6 +77,18 @@
 @layer components {
   .container {
     @apply mx-auto px-6 max-w-7xl;
+  }
+
+  .app-header {
+    @apply sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md shadow-border shadow-[rgba(0,0,0,0.08)_0px_-1px_0px_inset];
+  }
+
+  .dark .app-header {
+    @apply bg-dark-bg/80 shadow-[rgba(255,255,255,0.08)_0px_-1px_0px_inset];
+  }
+
+  .brand-mark {
+    @apply text-xl font-bold tracking-tighter text-vercel-black dark:text-dark-text;
   }
 
   .card {
@@ -87,6 +123,6 @@
   }
 
   .nav-link-active {
-    @apply text-vercel-black font-semibold;
+    @apply text-vercel-black font-semibold dark:text-dark-text;
   }
 }

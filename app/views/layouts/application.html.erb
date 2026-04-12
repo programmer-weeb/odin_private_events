@@ -23,12 +23,12 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-white text-vercel-black">
-    <header class="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md shadow-border shadow-[rgba(0,0,0,0.08)_0px_-1px_0px_inset]">
+  <body>
+    <header class="app-header">
       <div class="container mx-auto flex h-16 items-center justify-between px-6">
         <div class="flex items-center gap-8">
           <%= link_to root_path, class: "flex items-center gap-2" do %>
-            <span class="text-xl font-bold tracking-tighter text-vercel-black">ODIN EVENTS</span>
+            <span class="brand-mark">ODIN EVENTS</span>
           <% end %>
           
           <nav class="hidden md:flex items-center gap-6">
@@ -39,15 +39,22 @@
           </nav>
         </div>
 
-        <div class="flex items-center gap-4">
-          <% if user_signed_in? %>
-            <%= link_to "My Profile", user_path(current_user), class: "nav-link" %>
-            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-secondary py-1.5", data: { turbo_method: :delete } %>
-          <% else %>
-            <%= link_to "Sign In", new_user_session_path, class: "nav-link" %>
-            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
-          <% end %>
-        </div>
+      <div class="flex items-center gap-4">
+        <% if user_signed_in? %>
+          <%= link_to "My Profile", user_path(current_user), class: "nav-link" %>
+          <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-secondary py-1.5", data: { turbo_method: :delete} %>
+        <% else %>
+          <%= link_to "Sign In", new_user_session_path, class: "nav-link" %>
+          <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
+        <% end %>
+        
+        <!-- Dark Mode Toggle Button -->
+        <button type="button" class="btn btn-secondary py-1.5" data-controller="dark-mode" data-action="click->dark-mode#toggle" aria-label="Toggle dark mode">
+          <svg class="w-5 h-5" data-dark-mode-target="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </button>
+      </div>
       </div>
     </header>
 
