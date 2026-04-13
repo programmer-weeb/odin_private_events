@@ -46,15 +46,12 @@
       </section>
 
       <!-- Attended Events Section -->
-      <% past_events = @user.attended_events.where("event_date < ?", Time.current) %>
-      <% future_events = @user.attended_events.where("event_date >= ?", Time.current) %>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
         <section class="space-y-6">
           <h4 class="text-vercel-black">Upcoming Attendance</h4>
-          <% if future_events.any? %>
+          <% if @upcoming_attended_events.any? %>
             <div class="space-y-4">
-              <% future_events.each do |event| %>
+              <% @upcoming_attended_events.each do |event| %>
                 <%= link_to event_path(event), class: "card !p-4 group flex items-center justify-between no-underline" do %>
                   <div class="min-w-0">
                     <p class="text-sm font-semibold text-vercel-black truncate group-hover:text-develop-blue transition-colors"><%= event.title %></p>
@@ -75,9 +72,9 @@
 
         <section class="space-y-6">
           <h4 class="text-vercel-black text-gray-400">Past Attendance</h4>
-          <% if past_events.any? %>
+          <% if @past_attended_events.any? %>
             <div class="space-y-4 opacity-60 hover:opacity-100 transition-opacity">
-              <% past_events.each do |event| %>
+              <% @past_attended_events.each do |event| %>
                 <%= link_to event_path(event), class: "card !p-4 group flex items-center justify-between no-underline" do %>
                   <div class="min-w-0">
                     <p class="text-sm font-semibold text-vercel-black truncate"><%= event.title %></p>
