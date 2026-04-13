@@ -4,16 +4,12 @@ export default class extends Controller {
   static targets = ["icon"]
 
   connect() {
-    // Check for saved user preference or use system preference
+    // Check for saved user preference or default to light mode
     const savedTheme = localStorage.getItem('theme')
     if (savedTheme) {
       this.applyTheme(savedTheme)
     } else {
-      // Check system preference
-      // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      // this.applyTheme(prefersDark ? 'dark' : 'light')
-      const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches
-      this.applyTheme(prefersLight ? 'light' : 'dark')
+      this.applyTheme('light')
     }
     
     // Update icon based on current theme
